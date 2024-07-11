@@ -1,172 +1,113 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.mavenproject1;
+
+/**
+ *
+ * @author 166010
+ */
+
 import java.util.*;
 
-// Product class to represent items in the tech shop
 class Product {
-    private int id;
-    private String name;
-    private double price;
+    String name;
+    double price;
 
-    public Product(int id, String name, double price) {
-        this.id = id;
+    Product(String name, double price) {
         this.name = name;
         this.price = price;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
     @Override
     public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                '}';
+        return name + " ($" + price + ")";
     }
 }
 
-// TechShop class to simulate a tech shop using various data structures
-public class TechShopSimulation {
+public class Mavenproject1 {
+    // Array of product categories
+    String[] categories = {"Laptops", "Smartphones", "Accessories"};
+
+    // ArrayList of products
+    ArrayList<Product> products = new ArrayList<>();
+
+    // Stack for customer queries
+    Stack<String> customerQueries = new Stack<>();
+
+    // LinkedList for orders
+    LinkedList<Product> orders = new LinkedList<>();
+
+    // TreeMap for products by category
+    TreeMap<String, ArrayList<Product>> productTree = new TreeMap<>();
+
+    Mavenproject1() {
+        // Initialize productTree with categories
+        for (String category : categories) {
+            productTree.put(category, new ArrayList<>());
+        }
+    }
+
+    void addProduct(String category, Product product) {
+        if (productTree.containsKey(category)) {
+            productTree.get(category).add(product);
+            products.add(product);
+        } else {
+            System.out.println("Category not found!");
+        }
+    }
+
+    void addCustomerQuery(String query) {
+        customerQueries.push(query);
+    }
+
+    void processOrder(Product product) {
+        orders.add(product);
+    }
+
+    void displayProducts() {
+        for (String category : productTree.keySet()) {
+            System.out.println("Category: " + category);
+            for (Product product : productTree.get(category)) {
+                System.out.println(" - " + product);
+            }
+        }
+    }
+
+    void displayCustomerQueries() {
+        System.out.println("Customer Queries:");
+        while (!customerQueries.isEmpty()) {
+            System.out.println(" - " + customerQueries.pop());
+        }
+    }
+
+    void displayOrders() {
+        System.out.println("Orders:");
+        for (Product order : orders) {
+            System.out.println(" - " + order);
+        }
+    }
 
     public static void main(String[] args) {
-        // Using simple array
-        Product[] productsArray = new Product[10]; // Array size of 10 for storing products
+        Mavenproject1 shop = new Mavenproject1();
 
-        // Using ArrayList
-        List<Product> productsList = new ArrayList<>();
+        // Adding products
+        shop.addProduct("Laptops", new Product("Dell XPS 13", 999.99));
+        shop.addProduct("Smartphones", new Product("iPhone 13", 799.99));
+        shop.addProduct("Accessories", new Product("Wireless Mouse", 29.99));
 
-        // Using LinkedList
-        LinkedList<Product> productsLinkedList = new LinkedList<>();
+        // Adding customer queries
+        shop.addCustomerQuery("Do you have any discounts?");
+        shop.addCustomerQuery("What is the warranty period for laptops?");
 
-        // Using Binary Search Tree
-        BinarySearchTree<Product> productsTree = new BinarySearchTree<>();
+        // Processing orders
+        shop.processOrder(new Product("Dell XPS 13", 999.99));
+        shop.processOrder(new Product("Wireless Mouse", 29.99));
 
-        // Using Stack
-        Stack<Product> productsStack = new Stack<>();
-
-        // Adding products to different data structures
-        addProducts(productsArray, productsList, productsLinkedList, productsTree, productsStack);
-
-        // Simulating operations
-        simulateOperations(productsArray, productsList, productsLinkedList, productsTree, productsStack);
-    }
-
-    // Method to add products to each data structure
-    private static void addProducts(Product[] array, List<Product> list, LinkedList<Product> linkedList,
-                                    BinarySearchTree<Product> tree, Stack<Product> stack) {
-        // Adding products to array
-        array[0] = new Product(1, "Laptop", 999.99);
-        array[1] = new Product(2, "Tablet", 299.99);
-        array[2] = new Product(3, "Smartphone", 699.99);
-
-        // Adding products to ArrayList
-        list.add(new Product(4, "Keyboard", 49.99));
-        list.add(new Product(5, "Mouse", 19.99));
-
-        // Adding products to LinkedList
-        linkedList.add(new Product(6, "Headphones", 79.99));
-        linkedList.add(new Product(7, "Monitor", 299.99));
-
-        // Adding products to Binary Search Tree
-        tree.insert(new Product(8, "Printer", 199.99));
-        tree.insert(new Product(9, "Router", 149.99));
-
-        // Adding products to Stack
-        stack.push(new Product(10, "External Hard Drive", 129.99));
-        stack.push(new Product(11, "USB Drive", 19.99));
-    }
-
-    // Method to simulate operations on each data structure
-    private static void simulateOperations(Product[] array, List<Product> list, LinkedList<Product> linkedList,
-                                           BinarySearchTree<Product> tree, Stack<Product> stack) {
-        // Accessing elements from array
-        System.out.println("Products in array:");
-        for (Product product : array) {
-            if (product != null) {
-                System.out.println(product);
-            }
-        }
-
-        // Accessing elements from ArrayList
-        System.out.println("\nProducts in ArrayList:");
-        for (Product product : list) {
-            System.out.println(product);
-        }
-
-        // Accessing elements from LinkedList
-        System.out.println("\nProducts in LinkedList:");
-        for (Product product : linkedList) {
-            System.out.println(product);
-        }
-
-        // Accessing elements from Binary Search Tree (inorder traversal)
-        System.out.println("\nProducts in Binary Search Tree (inorder traversal):");
-        tree.inorder();
-
-        // Accessing elements from Stack
-        System.out.println("\nProducts in Stack (LIFO order):");
-        while (!stack.isEmpty()) {
-            System.out.println(stack.pop());
-        }
-    }
-
-    // Binary Search Tree class for managing products
-    static class BinarySearchTree<T extends Comparable<T>> {
-        private Node<T> root;
-
-        public BinarySearchTree() {
-            this.root = null;
-        }
-
-        public void insert(T data) {
-            this.root = insertRecursive(root, data);
-        }
-
-        private Node<T> insertRecursive(Node<T> current, T data) {
-            if (current == null) {
-                return new Node<>(data);
-            }
-
-            if (data.compareTo(current.data) < 0) {
-                current.left = insertRecursive(current.left, data);
-            } else if (data.compareTo(current.data) > 0) {
-                current.right = insertRecursive(current.right, data);
-            }
-
-            return current;
-        }
-
-        public void inorder() {
-            inorderRecursive(root);
-        }
-
-        private void inorderRecursive(Node<T> node) {
-            if (node != null) {
-                inorderRecursive(node.left);
-                System.out.println(node.data);
-                inorderRecursive(node.right);
-            }
-        }
-
-        private static class Node<T> {
-            private T data;
-            private Node<T> left;
-            private Node<T> right;
-
-            public Node(T data) {
-                this.data = data;
-                this.left = null;
-                this.right = null;
-            }
-        }
+        // Displaying information
+        shop.displayProducts();
+        shop.displayCustomerQueries();
+        shop.displayOrders();
     }
 }
